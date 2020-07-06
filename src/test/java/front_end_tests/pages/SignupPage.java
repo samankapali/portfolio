@@ -4,6 +4,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.Select;
+import org.testng.Assert;
 
 public class SignupPage {
 
@@ -54,7 +56,7 @@ public class SignupPage {
     public WebElement stateSelection;
     @FindBy(xpath = "//input[@id='postcode' and @name='postcode']")
     public WebElement zipInput;
-    @FindBy(xpath = "//selection[@id='id_country' and @name='id_country']")
+    @FindBy(xpath = "//select[@id='id_country' and @name='id_country']")
     public WebElement countrySelection;
     @FindBy(xpath = "//textarea[@id='other' and @name='other']")
     public WebElement additionalInfoTextbox;
@@ -71,4 +73,39 @@ public class SignupPage {
     // form error prompt
     @FindBy(xpath = "")
     public WebElement formActionMessages;
+
+
+    // pick the title for the user
+    public void setTitle(String title){
+        if(title.equalsIgnoreCase("mr")){
+            titleMrRdbutton.click();
+        }
+        else if(title.equalsIgnoreCase("mrs")){
+            titleMsRdbutton.click();
+        }
+        else {
+            throw new IllegalArgumentException("[Test Input Error] Title given not available for selection.");
+        }
+    }
+
+    // set state and country
+    public void setCountryAndState(String stateName, String countryName){
+        Select country = new Select(countrySelection);
+        country.selectByVisibleText(countryName);
+
+        Select state = new Select(stateSelection);
+        state.selectByVisibleText(stateName);
+    }
+
+    // set the date given in a MMDDYYYY format
+    public void setDateMMDDYYYY(String dateMMDDYYYY){
+        String[] dateSplit = dateMMDDYYYY.split("-");
+        Select daySelect = new Select(daySelection);
+        Select monthSelect = new Select(monthSelection);
+        Select yearSelect = new Select(yearSelection);
+
+        daySelect.selectByIndex(Integer.parseInt(dateSplit[1]));
+        monthSelect.selectByIndex(Integer.parseInt(dateSplit[0]));
+        yearSelect.selectByIndex(2021-Integer.parseInt(dateSplit[2]));
+    }
 }
